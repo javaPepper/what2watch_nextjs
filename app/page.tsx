@@ -1,95 +1,226 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+import Image from 'next/image';
+import FilmsList from './filmList/page';
+import { Film } from './types/film';
+import { GenreList } from './genreList/page';
+import { getFilms, getPromo } from './service/api';
 
-export default function Home() {
+export async function getServerSideProps() {
+  // const promo = await getPromo();
+  const films = await getFilms();
+
+  return {
+    props: {
+      // promo,
+      films
+    }
+  }
+}
+
+export default async function Main() {
+  const promo = await getPromo();
+  const films = await getFilms();
+  const {backgroundImage, name, posterImage, genre, released} = promo;
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
+    <body>
+      <div className='visually-hidden'>
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          xmlnsXlink='http://www.w3.org/1999/xlink'
+        >
+          <symbol id='add' viewBox='0 0 19 20'>
+            <title>+</title>
+            <desc>Created with Sketch.</desc>
+            <g
+              id='Page-1'
+              stroke='none'
+              strokeWidth='1'
+              fill='none'
+              fillRule='evenodd'
+            >
+              <polygon
+                id='+'
+                fill='#EEE5B5'
+                points='10.777832 11.2880859 10.777832 19.5527344 8.41650391 19.5527344 8.41650391 11.2880859 0.627929688 11.2880859 0.627929688 8.92675781 8.41650391 8.92675781 8.41650391 0.662109375 10.777832 0.662109375 10.777832 8.92675781 18.5664062 8.92675781 18.5664062 11.2880859'
+              />
+            </g>
+          </symbol>
+          <symbol id='full-screen' viewBox='0 0 27 27'>
+            <path
+              fillRule='evenodd'
+              clipRule='evenodd'
+              d='M23.8571 0H16V3.14286H23.8571V11H27V3.14286V0H23.8571Z'
+              fill='#FFF9D9'
+              fillOpacity='0.7'
+            />
+            <path
+              fillRule='evenodd'
+              clipRule='evenodd'
+              d='M27 23.8571V16H23.8571V23.8571H16V27H23.8571H27L27 23.8571Z'
+              fill='#FFF9D9'
+              fillOpacity='0.7'
+            />
+            <path
+              fillRule='evenodd'
+              clipRule='evenodd'
+              d='M0 3.14286L0 11H3.14286L3.14286 3.14286L11 3.14286V0H3.14286H0L0 3.14286Z'
+              fill='#FFF9D9'
+              fillOpacity='0.7'
+            />
+            <path
+              fillRule='evenodd'
+              clipRule='evenodd'
+              d='M3.14286 27H11V23.8571H3.14286L3.14286 16H0L0 23.8571V27H3.14286Z'
+              fill='#FFF9D9'
+              fillOpacity='0.7'
+            />
+          </symbol>
+          <symbol id='in-list' viewBox='0 0 18 14'>
+            <path
+              fillRule='evenodd'
+              clipRule='evenodd'
+              d='M2.40513 5.35353L6.1818 8.90902L15.5807 0L18 2.80485L6.18935 14L0 8.17346L2.40513 5.35353Z'
+              fill='#EEE5B5'
+            />
+          </symbol>
+          <symbol id='pause' viewBox='0 0 14 21'>
+            <symbol id='play-s' viewBox='0 0 19 19'>
+              <path
+                fillRule='evenodd'
+                clipRule='evenodd'
+                d='M0 0L19 9.5L0 19V0Z'
+                fill='#EEE5B5'
+              />
+            </symbol>
+            <title>Artboard</title>
+            <desc>Created with Sketch.</desc>
+            <g
+              id='Artboard'
+              stroke='none'
+              strokeWidth='1'
+              fill='none'
+              fillRule='evenodd'
+            >
+              <polygon
+                id='Line'
+                fill='#EEE5B5'
+                fillRule='nonzero'
+                points='0 -1.11910481e-13 4 -1.11910481e-13 4 21 0 21'
+              />
+              <polygon
+                id='Line'
+                fill='#EEE5B5'
+                fillRule='nonzero'
+                points='10 -1.11910481e-13 14 -1.11910481e-13 14 21 10 21'
+              />
+            </g>
+          </symbol>
+        </svg>
+      </div>
+      <div>
+        <section className='film-card'>
+          <div className='film-card__bg'>
             <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
+              src={backgroundImage}
+              alt={name}
+              width={1300}
+              height={552}
               priority
             />
-          </a>
+          </div>
+          <h1 className='visually-hidden'>WTW</h1>
+          <header className='page-header film-card__head'>
+            <div className='logo'>
+              <a className='logo__link'>
+                <span className='logo__letter logo__letter--1'>W</span>
+                <span className='logo__letter logo__letter--2'>T</span>
+                <span className='logo__letter logo__letter--3'>W</span>
+              </a>
+            </div>
+            <ul className='user-block'>
+              <li className='user-block__item'>
+                <div className='user-block__avatar'>
+                  <Image
+                    src={'/img/avatar.jpg'}
+                    alt='User avatar'
+                    width={63}
+                    height={63}
+                  />
+                </div>
+              </li>
+              <li className='user-block__item'>
+                <a className='user-block__link'>Sign out</a>
+              </li>
+            </ul>
+          </header>
+          <div className='film-card__wrap'>
+            <div className='film-card__info'>
+              <div className='film-card__poster'>
+                <Image
+                  src={posterImage}
+                  alt={`${name} poster`}
+                  width={218}
+                  height={327}
+                />
+              </div>
+              <div className='film-card__desc'>
+                <h2 className='film-card__title'>{name}</h2>
+                <p className='film-card__meta'>
+                  <span className='film-card__genre'>{genre}</span>
+                  <span className='film-card__year'>{released}</span>
+                </p>
+                <div className='film-card__buttons'>
+                  <button
+                    className='btn btn--play film-card__button'
+                    type='button'
+                  >
+                    <svg viewBox='0 0 19 19' width={19} height={19}>
+                      <use xlinkHref='#play-s' />
+                    </svg>
+                    <span>Play</span>
+                  </button>
+                  <button
+                    className='btn btn--list film-card__button'
+                    type='button'
+                  >
+                    <svg viewBox='0 0 19 20' width={19} height={20}>
+                      <use xlinkHref='#add' />
+                    </svg>
+                    <span>My list</span>
+                    <span className='film-card__count'>9</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <div className='page-content'>
+          <section className='catalog'>
+            <h2 className='catalog__title visually-hidden'>Catalog</h2>
+              <GenreList/>
+            <div className='catalog__films-list'>
+              <FilmsList films={films}/>
+            </div>
+            <div className='catalog__more'>
+              <button className='catalog__button' type='button'>
+                Show more
+              </button>
+            </div>
+          </section>
+          <footer className='page-footer'>
+            <div className='logo'>
+              <a className='logo__link logo__link--light'>
+                <span className='logo__letter logo__letter--1'>W</span>
+                <span className='logo__letter logo__letter--2'>T</span>
+                <span className='logo__letter logo__letter--3'>W</span>
+              </a>
+            </div>
+            <div className='copyright'>
+              <p>© 2019-2023 What to watch Ltd.</p>
+            </div>
+          </footer>
         </div>
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+    </body>
+  );
 }
